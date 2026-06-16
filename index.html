@@ -3,253 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MuziDog Engine</title>
+    <title>MuziDog Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* БАЗОВАЯ МОНОХРОМНАЯ ТЕМА (ПО УМОЛЧАНИЮ) */
         :root {
-            --bg-main: #090909;
-            --bg-sidebar: #111111;
-            --bg-card: #161616;
-            --border: #222222;
+            --bg-main: #060608;
+            --bg-sidebar: #0d0e12;
+            --bg-card: #13151b;
+            --border: #1f222c;
             --text-main: #ffffff;
-            --text-muted: #777777;
-            --accent: #ffffff;
-            --accent-muted: #aaaaaa;
-            --wave-gradient: linear-gradient(45deg, #1f1f1f, #3a3a3a, #111111);
-            --radius: 8px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-muted: #6e7382;
+            --accent: #ff0055;
+            --accent-gradient: linear-gradient(45deg, #ff0055, #00ffcc);
+            --radius: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* КАСТОМНЫЕ ТЕМЫ ИЗ НАСТРОЕК */
+        /* КАСТОМНЫЕ ТЕМЫ */
         body[data-theme="gradient"] {
-            --bg-main: #0b071e;
-            --bg-sidebar: #120c2e;
-            --bg-card: #1d1547;
-            --border: #34257c;
-            --accent: #ff007f;
-            --text-main: #f1ecff;
-            --wave-gradient: linear-gradient(135deg, #7928ca, #ff0080);
+            --bg-main: #0f0c1b; --bg-sidebar: #17122b; --bg-card: #221a3f; --border: #352963; --accent: #00ffcc;
         }
         body[data-theme="cyber"] {
-            --bg-main: #000000;
-            --bg-sidebar: #120015;
-            --bg-card: #1a0022;
-            --border: #00ff66;
-            --accent: #00ff66;
-            --text-main: #00ff66;
-            --text-muted: #006622;
-            --wave-gradient: linear-gradient(45deg, #ff0055, #00ff66);
-        }
-        body[data-theme="space"] {
-            --bg-main: #0d1117;
-            --bg-sidebar: #161b22;
-            --bg-card: #21262d;
-            --border: #30363d;
-            --accent: #58a6ff;
-            --text-main: #c9d1d9;
-            --wave-gradient: linear-gradient(45deg, #1f6feb, #8e2de2);
+            --bg-main: #000000; --bg-sidebar: #0a0a0a; --bg-card: #111111; --border: #00ff66; --accent: #00ff66; --text-main: #00ff66; --text-muted: #004411;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; transition: var(--transition); }
 
-        /* САЙДБАР С НАВИГАЦИЕЙ */
-        .sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; transition: var(--transition); justify-content: space-between;}
-        .logo { font-family: monospace; font-size: 11px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 30px; }
-        .nav-group { display: flex; flex-direction: column; gap: 6px; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); text-align: left; padding: 12px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
+        /* ТОСТ-УВЕДОМЛЕНИЯ СВЕРХУ */
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(255, 255, 255, 0.95); color: #000; padding: 14px 28px; border-radius: 30px; font-weight: 600; font-size: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); animation: slideDown 0.3s ease, fadeOut 0.3s ease 2.5s forwards; display: flex; align-items: center; gap: 10px; }
+        @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
+
+        /* САЙДБАР */
+        .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px; justify-content: space-between; z-index: 10; }
+        .logo { font-size: 28px; font-weight: 900; letter-spacing: -1px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 35px; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
+        .nav-group { display: flex; flex-direction: column; gap: 8px; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); text-align: left; padding: 14px 18px; border-radius: var(--radius); font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 12px; }
+        .nav-btn i { font-size: 18px; width: 24px; text-align: center; }
         .nav-btn:hover, .nav-btn.active { color: var(--text-main); background: var(--bg-card); }
-        .nav-btn.active { border-left: 3px solid var(--accent); }
+        .nav-btn.active { border-left: 4px solid var(--accent); color: var(--text-main); }
 
-        /* ОСНОВНОЙ КОНТЕНТНЫЙ БЛОК */
-        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 100px; position: relative; }
-        .view { display: none; padding: 40px; animation: fadeIn 0.4s ease; }
-        .view.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ВАЙБ-ПОТОК (ГЛАВНАЯ) */
-        .wave-container { background: var(--wave-gradient); padding: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-        .wave-info h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
-        .wave-info p { color: rgba(255,255,255,0.7); font-size: 14px; }
-        .wave-play-btn { width: 70px; height: 70px; border-radius: 50%; background: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
-        .wave-play-btn:hover { transform: scale(1.05); }
-
-        /* СЕТКА ТРЕКОВ И КАРТОЧЕК */
-        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .music-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: var(--transition); position: relative; }
-        .music-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .music-card img { width: 100%; aspect-ratio: 1; border-radius: 4px; object-fit: cover; margin-bottom: 12px; background: #222; }
-        .card-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-artist { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
-        /* СТРОКИ ТРЕКОВ */
-        .track-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-radius: var(--radius); border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
-        .track-row:hover { background: var(--bg-card); }
-        .track-row.active { background: var(--bg-card); border-left: 3px solid var(--accent); }
-        .row-meta { display: flex; align-items: center; gap: 15px; flex-grow: 1; overflow: hidden; }
-        .row-index { font-size: 12px; color: var(--text-muted); width: 20px; text-align: center; }
-        .row-info { display: flex; flex-direction: column; overflow: hidden; }
-        .row-title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .row-artist { font-size: 12px; color: var(--text-muted); }
-        .row-controls { display: flex; align-items: center; gap: 15px; }
-
-        /* ПОИСКОВАЯ СИСТЕМА */
-        .search-wrapper { position: relative; width: 100%; margin-bottom: 30px; }
-        .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 30px; padding: 15px 25px; color: #fff; font-size: 16px; outline: none; transition: var(--transition); }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,255,255,0.05); }
-        .search-hints { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 5px; z-index: 10; display: none; max-height: 250px; overflow-y: auto; }
-        .hint-item { padding: 12px 20px; cursor: pointer; font-size: 14px; border-bottom: 1px solid var(--border); }
+        /* ГЛАВНАЯ ПАНЕЛЬ И СУПЕР-ПОИСК СВЕРХУ */
+        .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 110px; }
+        .header-sticky { position: sticky; top: 0; background: linear-gradient(to bottom, var(--bg-main) 70%, transparent); padding: 30px 40px 15px 40px; z-index: 5; }
+        .search-wrapper { position: relative; width: 100%; max-width: 700px; margin: 0 auto; }
+        .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 30px; padding: 16px 25px 16px 55px; color: #fff; font-size: 16px; font-weight: 500; outline: none; transition: var(--transition); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,0,85,0.15); }
+        .search-wrapper i { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 18px; }
+        
+        .search-hints { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 8px; z-index: 20; display: none; max-height: 300px; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .hint-item { padding: 14px 20px; cursor: pointer; font-size: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .hint-item:hover { background: var(--bg-main); color: var(--accent); }
 
-        /* НИЖНИЙ ПЛЕЕР-БАР */
-        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 90px; background: rgba(17,17,17,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; z-index: 100; }
-        .player-left { width: 25%; display: flex; align-items: center; gap: 15px; }
-        .player-center { width: 50%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .player-right { width: 25%; display: flex; align-items: center; justify-content: flex-end; gap: 15px; }
+        /* КОНТЕНТНЫЕ ЗОНЫ */
+        .view { display: none; padding: 20px 40px; animation: smoothUp 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .view.active { display: block; }
+        @keyframes smoothUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btn-icon { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; transition: var(--transition); padding: 5px; }
-        .btn-icon:hover, .btn-icon.active { color: var(--text-main); }
-        .btn-icon.liked { color: #ff3366 !important; }
+        /* ВАЙБ-ПОТОК С СИНХРОННЫМ ВИЗУАЛИЗАТОРОМ */
+        .wave-container { background: linear-gradient(135deg, #12131a, #07070a); border: 1px solid var(--border); padding: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; position: relative; overflow: hidden; }
+        .wave-info { z-index: 2; }
+        .wave-info h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .wave-info p { color: var(--text-muted); font-size: 15px; }
+        .wave-play-btn { width: 75px; height: 75px; border-radius: 50%; background: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #000; box-shadow: 0 8px 25px rgba(255,255,255,0.2); transition: var(--transition); z-index: 2; }
+        .wave-play-btn:hover { transform: scale(1.08); background: var(--accent); color: #fff; }
+        
+        /* Холст аудио-спектра */
+        #visualizer { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; z-index: 1; opacity: 0.4; pointer-events: none; }
 
-        .main-controls { display: flex; align-items: center; gap: 20px; }
-        .play-master { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #000; border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        /* СЕТКА И СТРОКИ ТРЕКОВ */
+        .section-title { font-size: 24px; font-weight: 700; margin-bottom: 25px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+        
+        .music-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: var(--transition); }
+        .music-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+        .music-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover; margin-bottom: 14px; background: #1f222c; }
+        .card-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-artist { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        .progress-block { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 600px; }
-        .slider { flex-grow: 1; height: 4px; accent-color: var(--accent); background: #333; border-radius: 2px; cursor: pointer; outline: none; }
-        .time-label { font-size: 11px; color: var(--text-muted); width: 35px; text-align: center; }
+        .track-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: var(--radius); border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+        .track-row:hover { background: var(--bg-card); transform: translateX(4px); }
+        .track-row.active { background: var(--bg-card); border-left: 4px solid var(--accent); }
+        .row-meta { display: flex; align-items: center; gap: 20px; flex-grow: 1; overflow: hidden; }
+        .row-img { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; }
+        .row-info { display: flex; flex-direction: column; overflow: hidden; }
+        .row-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .row-artist { font-size: 13px; color: var(--text-muted); }
+        .row-controls { display: flex; align-items: center; gap: 20px; }
 
-        /* ПЛЕЙЛИСТЫ И КНОПКИ */
-        .action-btn { background: var(--accent); color: var(--bg-main); border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; transition: var(--transition); }
-        .action-btn:hover { opacity: 0.9; }
+        /* НИЖНИЙ ПАТТЕРН УПРАВЛЕНИЯ (PLAYER BAR) */
+        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 100px; background: rgba(13,14,18,0.92); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 100; }
+        .player-left { width: 30%; display: flex; align-items: center; gap: 20px; }
+        .player-center { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .player-right { width: 30%; display: flex; align-items: center; justify-content: flex-end; gap: 20px; }
 
-        /* НАСТРОЙКИ */
-        .settings-card { background: var(--bg-card); border: 1px solid var(--border); padding: 25px; border-radius: var(--radius); margin-bottom: 20px; }
-        .theme-selector { display: flex; gap: 10px; margin-top: 15px; }
-        .theme-dot { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        /* УВЕЛИЧЕННЫЕ КНОПКИ ДЕЙСТВИЙ */
+        .btn-xl { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 22px; transition: var(--transition); padding: 8px; display: flex; align-items: center; justify-content: center; }
+        .btn-xl:hover { color: var(--text-main); transform: scale(1.15); }
+        .btn-xl.liked { color: #ff0055 !important; }
+        .btn-xl.shelved { color: #00ffcc !important; }
+
+        .main-controls { display: flex; align-items: center; gap: 25px; }
+        .play-master { width: 50px; height: 50px; border-radius: 50%; background: #fff; color: #000; border: none; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .play-master:hover { transform: scale(1.1); background: var(--accent); color: #fff; }
+
+        .progress-block { display: flex; align-items: center; gap: 15px; width: 100%; }
+        .slider { flex-grow: 1; height: 5px; accent-color: var(--accent); background: #252836; border-radius: 3px; cursor: pointer; outline: none; }
+        .time-label { font-size: 12px; color: var(--text-muted); width: 40px; }
+
+        .action-btn { background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+        .action-btn:hover { background: var(--accent); color: #fff; }
+
+        .settings-card { background: var(--bg-card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); margin-bottom: 25px; }
+        .theme-selector { display: flex; gap: 15px; margin-top: 15px; }
+        .theme-dot { width: 45px; height: 45px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
         .theme-dot.active { border-color: #fff; }
-
-        /* ДОПОЛНИТЕЛЬНЫЙ ФУНКЦИОНАЛ ИЗМЕНЕНИЯ СКОРОСТИ */
-        .extra-panel { font-size: 12px; display: flex; align-items: center; gap: 10px; color: var(--text-muted); }
-        .extra-panel select { background: var(--bg-card); border: 1px solid var(--border); color: #fff; padding: 3px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- СИСТЕМНЫЙ НАВИГАТОР -->
+    <div class="toast-container" id="toast-box"></div>
+
     <aside class="sidebar">
         <div class="top-nav">
-            <div class="logo" id="logo-block">MuziDog</div>
+            <div class="logo" id="logo-block"><i class="fa-solid fa-dog"></i> MuziDog</div>
             <div class="nav-group">
-                <button class="nav-btn active" data-target="view-home">🏠 Главная</button>
-                <button class="nav-btn" data-target="view-search">🔍 Поиск</button>
-                <button class="nav-btn" data-target="view-library">📚 Моя медиатека</button>
-                <button class="nav-btn" data-target="view-playlists">💿 Плейлисты</button>
-                <button class="nav-btn" data-target="view-settings">⚙️ Настройки</button>
+                <button class="nav-btn active" data-target="view-home"><i class="fa-solid fa-house"></i> Главная</button>
+                <button class="nav-btn" data-target="view-favorites"><i class="fa-solid fa-heart"></i> Любимые треки</button>
+                <button class="nav-btn" data-target="view-mytracks"><i class="fa-solid fa-box-archive"></i> Моя полка</button>
+                <button class="nav-btn" data-target="view-playlists"><i class="fa-solid fa-compact-disc"></i> Плейлисты</button>
+                <button class="nav-btn" data-target="view-settings"><i class="fa-solid fa-gear"></i> Настройки</button>
             </div>
         </div>
-        <div style="font-size: 11px; color: var(--text-muted); text-align: center;">Node: Offline Engine</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-bolt"></i> iTunes Core Linked</div>
     </aside>
 
-    <!-- ИНФОРМАЦИОННЫЕ ПАНЕЛИ -->
     <main class="main-panel">
         
-        <!-- ГЛАВНЫЙ ЭКРАН -->
+        <div class="header-sticky">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" id="global-search" placeholder="Поиск любимых треков и артистов в iTunes базе...">
+                <div class="search-hints" id="search-hints"></div>
+            </div>
+        </div>
+
         <section id="view-home" class="view active">
             <div class="wave-container">
                 <div class="wave-info">
                     <h1>Вайб-Поток</h1>
-                    <p>Бесконечный умный поток музыки на основе твоих предпочтений и лайков.</p>
+                    <p>Интеллектуальный бесконечный стриминг. Пульсирует под твое настроение.</p>
                 </div>
-                <button class="wave-play-btn" id="wave-flow-trigger">⚡</button>
+                <button class="wave-play-btn" id="wave-flow-trigger"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                <canvas id="visualizer"></canvas>
             </div>
 
-            <h2 class="section-title">Мировые Рекомендации</h2>
+            <h2 class="section-title"><i class="fa-solid fa-fire" style="color: #ff9900;"></i> Сейчас в тренде</h2>
             <div class="grid-layout" id="recommendations-grid"></div>
         </section>
 
-        <!-- ПОИСК С ПОДСКАЗКАМИ -->
-        <section id="view-search" class="view">
-            <div class="search-wrapper">
-                <input type="text" class="search-input" id="global-search" placeholder="Исполнители, треки, направления...">
-                <div class="search-hints" id="search-hints"></div>
-            </div>
-            <h2 class="section-title" id="search-results-title">Популярно во всем мире</h2>
-            <div id="search-results-list"></div>
+        <section id="view-favorites" class="view">
+            <h2 class="section-title"><i class="fa-solid fa-heart" style="color: #ff0055;"></i> Любимые треки (Лайки)</h2>
+            <div id="library-favorites-list"></div>
         </section>
 
-        <!-- МЕДИАТЕКА (ИЗБРАННОЕ И МОИ ТРЕКИ) -->
-        <section id="view-library" class="view">
-            <h2 class="section-title">♥️ Любимые треки</h2>
-            <div id="library-favorites-list" style="margin-bottom: 40px;"></div>
-
-            <h2 class="section-title">📂 Моя Полка (Сохраненные)</h2>
+        <section id="view-mytracks" class="view">
+            <h2 class="section-title"><i class="fa-solid fa-box-archive" style="color: #00ffcc;"></i> Личная полка сохраненных треков</h2>
             <div id="library-saved-list"></div>
         </section>
 
-        <!-- КАСТОМНЫЕ ПЛЕЙЛИСТЫ -->
         <section id="view-playlists" class="view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 class="section-title" style="margin: 0;">Твои Плейлисты</h2>
-                <button class="action-btn" id="create-playlist-btn">+ Создать новый</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 class="section-title" style="margin: 0;"><i class="fa-solid fa-layer-group"></i> Твои сборники</h2>
+                <button class="action-btn" id="create-playlist-btn"><i class="fa-solid fa-plus"></i> Создать плейлист</button>
             </div>
             <div class="grid-layout" id="playlists-grid"></div>
             <div id="active-playlist-view" style="margin-top: 40px;"></div>
         </section>
 
-        <!-- СИСТЕМНЫЕ НАСТРОЙКИ -->
         <section id="view-settings" class="view">
-            <h2 class="section-title">Настройки системы</h2>
+            <h2 class="section-title"><i class="fa-solid fa-sliders"></i> Параметры плеера</h2>
             
             <div class="settings-card">
-                <h3>Визуальный Скин (Тема)</h3>
+                <h3>Визуальный стиль</h3>
                 <div class="theme-selector">
                     <div class="theme-dot active" style="background: #111; color: #fff;" data-theme="mono">M</div>
                     <div class="theme-dot" style="background: linear-gradient(45deg, #7928ca, #ff0080);" data-theme="gradient">G</div>
-                    <div class="theme-dot" style="background: #000; color: #00ff66; border: 1px solid #00ff66;" data-theme="cyber">C</div>
-                    <div class="theme-dot" style="background: #1f6feb; color: #fff;" data-theme="space">S</div>
+                    <div class="theme-dot" style="background: #000; color: #00ff66;" data-theme="cyber">C</div>
                 </div>
             </div>
 
             <div class="settings-card">
-                <h3>Таймер сна (Sleep Timer)</h3>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;">Музыка автоматически остановится через указанное время.</p>
-                <select id="sleep-timer" style="background: var(--bg-main); color: #fff; padding: 8px 12px; border-radius: 4px; border: 1px solid var(--border);">
+                <h3>Таймер автоматического отключения</h3>
+                <select id="sleep-timer" style="background: var(--bg-main); color: #fff; padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border); font-weight: 600; outline: none; margin-top: 10px;">
                     <option value="0">Выключен</option>
-                    <option value="5">5 минут</option>
-                    <option value="15">15 минут</option>
-                    <option value="30">30 минут</option>
-                    <option value="60">60 минут</option>
+                    <option value="5">5 Минут</option>
+                    <option value="15">15 Минут</option>
+                    <option value="30">30 Минут</option>
                 </select>
-                <span id="timer-countdown" style="margin-left: 15px; font-size: 13px; color: var(--accent);"></span>
-            </div>
-
-            <div class="settings-card">
-                <h3>Управление локальной базой данных</h3>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Все списки воспроизведения и настройки хранятся в вашей песочнице LocalStorage.</p>
-                <button class="action-btn" id="export-db-btn" style="background: #222; color: #fff; border: 1px solid var(--border); margin-right: 10px;">Экспорт конфигурации</button>
-                <button class="action-btn" id="clear-db-btn" style="background: #ff3366; color: #fff;">Очистить все данные</button>
+                <span id="timer-countdown" style="margin-left: 15px; font-weight: bold; color: var(--accent);"></span>
             </div>
         </section>
     </main>
 
-    <!-- ГЛОБАЛЬНЫЙ БЛОК УПРАВЛЕНИЯ ЗВУКОМ -->
     <footer class="player-bar">
         <div class="player-left">
+            <img src="https://placehold.co/100x100/13151b/fff?text=Muzi" class="row-img" id="master-img" alt="cover">
             <div class="row-info">
-                <span class="row-title" id="master-title">Нет трека в потоке</span>
-                <span class="row-artist" id="master-artist">Инициализируйте плеер</span>
+                <span class="row-title" id="master-title">Ожидание потока</span>
+                <span class="row-artist" id="master-artist">MuziDog Engine v2</span>
             </div>
-            <button class="btn-icon" id="master-like-btn">♥</button>
-            <button class="btn-icon" id="master-shelf-btn">📥</button>
+            <button class="btn-xl" id="master-like-btn" title="Лайкнуть"><i class="fa-solid fa-heart"></i></button>
+            <button class="btn-xl" id="master-shelf-btn" title="На мою полку"><i class="fa-solid fa-box-archive"></i></button>
         </div>
 
         <div class="player-center">
             <div class="main-controls">
-                <button class="btn-icon" id="master-prev">⏮</button>
-                <button class="play-master" id="master-play">▶</button>
-                <button class="btn-icon" id="master-next">⏭</button>
+                <button class="btn-xl" id="master-prev"><i class="fa-solid fa-backward-step"></i></button>
+                <button class="play-master" id="master-play"><i class="fa-solid fa-play"></i></button>
+                <button class="btn-xl" id="master-next"><i class="fa-solid fa-forward-step"></i></button>
             </div>
             <div class="progress-block">
                 <span class="time-label" id="time-cur">0:00</span>
@@ -259,43 +233,43 @@
         </div>
 
         <div class="player-right">
-            <div class="extra-panel">
-                <span>Скорость:</span>
-                <select id="track-pitch">
-                    <option value="0.75">0.75x</option>
-                    <option value="1.0" selected>1.0x</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                </select>
-            </div>
-            <span style="font-size: 14px;">🔊</span>
-            <input type="range" class="slider" id="master-volume" min="0" max="1" step="0.05" value="0.7" style="max-width: 80px;">
-            <button class="btn-icon" id="master-download" title="Скачать трек локально">💾</button>
+            <button class="btn-xl" id="master-download" title="Скачать MP3 напрямую" style="margin-right: 15px;"><i class="fa-solid fa-circle-down"></i></button>
+            <i class="fa-solid fa-volume-high" style="color: var(--text-muted);"></i>
+            <input type="range" class="slider" id="master-volume" min="0" max="1" step="0.05" value="0.7" style="max-width: 100px;">
         </div>
     </footer>
 
-    <!-- ОПЕРАЦИОННЫЙ СКРИПТ КЛИЕНТА -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const API_HOST = "https://api.audius.co";
-            
-            // ГЛОБАЛЬНОЕ СОСТОЯНИЕ (БЕЗ СЕРВЕРА)
+            // Инициализация аудиосистемы с CORS-политикой для работы визуализатора
+            const audio = new Audio();
+            audio.crossOrigin = "anonymous";
+
+            let audioCtx = null, analyser = null, source = null;
+
             let state = {
                 currentQueue: [],
                 currentIndex: null,
                 favorites: JSON.parse(localStorage.getItem("md_favs")) || [],
                 myTracks: JSON.parse(localStorage.getItem("md_shelf")) || [],
                 playlists: JSON.parse(localStorage.getItem("md_playlists")) || [],
-                isFlowActive: false,
-                flowHistory: []
+                isFlowActive: false
             };
 
-            const audio = new Audio();
-            let sleepTimerInterval = null;
+            // --- СИСТЕМА ТОСТ-УВЕДОМЛЕНИЙ ---
+            function toast(message, icon = "fa-circle-check") {
+                const box = document.getElementById("toast-box");
+                const t = document.createElement("div");
+                t.className = "toast";
+                t.innerHTML = `<i class="fa-solid ${icon}" style="color:var(--accent)"></i> ${message}`;
+                box.appendChild(t);
+                setTimeout(() => t.remove(), 2800);
+            }
 
-            // DOM ЭЛЕМЕНТЫ Навигации
+            // --- НАВИГАЦИЯ С ЭФФЕКТОМ МАСШТАБА ЛОГОТИПА ---
             const navButtons = document.querySelectorAll(".nav-btn");
             const views = document.querySelectorAll(".view");
+            const logoBlock = document.getElementById("logo-block");
 
             navButtons.forEach(btn => {
                 btn.addEventListener("click", () => {
@@ -305,22 +279,22 @@
                     btn.classList.add("active");
                     document.getElementById(btn.dataset.target).classList.add("active");
                     
-                    // Показ логотипа только на Главной вкладке (view-home)
                     if(btn.dataset.target === "view-home") {
-                        document.getElementById("logo-block").style.opacity = "1";
+                        logoBlock.style.transform = "scale(1)";
+                        logoBlock.style.opacity = "1";
                     } else {
-                        document.getElementById("logo-block").style.opacity = "0.3"; 
+                        logoBlock.style.transform = "scale(0.9)";
+                        logoBlock.style.opacity = "0.5";
                     }
 
-                    if(btn.dataset.target === "view-library") renderLibrary();
+                    if(btn.dataset.target === "view-favorites" || btn.dataset.target === "view-mytracks") renderLibrary();
                     if(btn.dataset.target === "view-playlists") renderPlaylists();
                 });
             });
 
-            // --- УМНЫЙ ПОИСК С ПОДСКАЗКАМИ ---
+            // --- ОБНОВЛЕННЫЙ ДВИЖОК ПОИСКА И ТРЕНДОВ (iTunes API) ---
             const searchInput = document.getElementById("global-search");
             const searchHints = document.getElementById("search-hints");
-            const searchResultsList = document.getElementById("search-results-list");
             let debounceTimer;
 
             searchInput.addEventListener("input", () => {
@@ -330,181 +304,191 @@
 
                 debounceTimer = setTimeout(async () => {
                     try {
-                        const res = await fetch(`${API_HOST}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=MuziDog`);
-                        const json = await res.json();
-                        const tracks = json.data || [];
+                        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=6`);
+                        const data = await res.json();
+                        const tracks = data.results || [];
                         
                         if(tracks.length > 0) {
                             searchHints.innerHTML = "";
-                            tracks.slice(0, 5).forEach(t => {
+                            tracks.forEach(t => {
                                 const hint = document.createElement("div");
                                 hint.className = "hint-item";
-                                hint.textContent = `${t.title} — ${t.user.name}`;
+                                hint.innerHTML = `<i class="fa-solid fa-music"></i> ${t.trackName} — <b>${t.artistName}</b>`;
                                 hint.addEventListener("click", () => {
-                                    state.currentQueue = [t];
+                                    const mapped = mapTrackData(t);
+                                    state.currentQueue = [mapped];
                                     playTrack(0);
                                     searchHints.style.display = "none";
-                                    searchInput.value = t.title;
+                                    searchInput.value = t.trackName;
                                 });
                                 searchHints.appendChild(hint);
                             });
                             searchHints.style.display = "block";
                         }
                     } catch(e) {}
-                }, 300);
+                }, 250);
             });
 
-            document.addEventListener("click", (e) => {
-                if(e.target !== searchInput) searchHints.style.display = "none";
-            });
+            document.addEventListener("click", (e) => { if(e.target !== searchInput) searchHints.style.display = "none"; });
 
             searchInput.addEventListener("keypress", async (e) => {
                 if(e.key === "Enter") {
                     searchHints.style.display = "none";
                     const query = searchInput.value.trim();
-                    document.getElementById("search-results-title").textContent = `Результаты поиска по запросу: "${query}"`;
-                    searchResultsList.innerHTML = "<div style='color:var(--text-muted)'>Сканирование распределенной сети...</div>";
+                    toast(`Ищем по запросу: ${query}`, "fa-magnifying-glass");
                     
                     try {
-                        const res = await fetch(`${API_HOST}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=MuziDog`);
-                        const json = await res.json();
-                        state.currentQueue = json.data || [];
-                        renderTrackList(searchResultsList, state.currentQueue);
-                    } catch(err) { searchResultsList.innerHTML = "Ошибка связи."; }
+                        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=30`);
+                        const data = await res.json();
+                        state.currentQueue = (data.results || []).map(mapTrackData);
+                        
+                        // Перекидываем пользователя на главную страницу для отображения выдачи
+                        document.querySelector('[data-target="view-home"]').click();
+                        const grid = document.getElementById("recommendations-grid");
+                        renderGridList(grid, state.currentQueue);
+                    } catch(err) { toast("Ошибка сети при поиске", "fa-circle-exclamation"); }
                 }
             });
 
-            // --- РЕКОМЕНДАЦИИ И ТРЕНДЫ (ГЛАВНАЯ) ---
+            function mapTrackData(item) {
+                return {
+                    id: item.trackId,
+                    title: item.trackName,
+                    artist: item.artistName,
+                    streamUrl: item.previewUrl,
+                    cover: item.artworkUrl100 ? item.artworkUrl100.replace("100x100bb.jpg", "400x400bb.jpg") : "https://placehold.co/400x400/13151b/fff?text=Muzi"
+                };
+            }
+
+            // --- ЗАГРУЗКА ДЕФОЛТНЫХ РЕКОМЕНДАЦИЙ С ХОРОШИМ ЗВУКОМ ---
             async function loadGlobalTrending() {
                 const grid = document.getElementById("recommendations-grid");
-                grid.innerHTML = "Загрузка...";
+                grid.innerHTML = "<div style='color:var(--text-muted)'>Синхронизация глобальных чартов...</div>";
                 try {
-                    const res = await fetch(`${API_HOST}/v1/tracks/trending?app_name=MuziDog`);
-                    const json = await res.json();
-                    const tracks = json.data || [];
-                    grid.innerHTML = "";
-                    
-                    tracks.slice(0, 12).forEach((track) => {
-                        const card = document.createElement("div");
-                        card.className = "music-card";
-                        const cover = track.artwork?.["150x150"] || "https://placehold.co/150x150/111/fff?text=MuziDog";
-                        card.innerHTML = `
-                            <img src="${cover}" alt="cover">
-                            <div class="card-title">${track.title}</div>
-                            <div class="card-artist">${track.user.name}</div>
-                        `;
-                        card.addEventListener("click", () => {
-                            state.currentQueue = tracks;
-                            const idx = tracks.findIndex(t => t.id === track.id);
-                            playTrack(idx !== -1 ? idx : 0);
-                        });
-                        grid.appendChild(card);
-                    });
+                    // Используем стабильный поисковый токен популярных направлений для генерации рекомендаций
+                    const res = await fetch(`https://itunes.apple.com/search?term=synthwave&media=music&limit=12`);
+                    const data = await res.json();
+                    state.currentQueue = (data.results || []).map(mapTrackData);
+                    renderGridList(grid, state.currentQueue);
                 } catch(e) { grid.innerHTML = "Не удалось загрузить рекомендации."; }
             }
 
-            // --- АЛГОРИТМ ВАЙБ-ПОТОКА (УМНАЯ ВОЛНА) ---
-            document.getElementById("wave-flow-trigger").addEventListener("click", async () => {
-                state.isFlowActive = true;
-                document.getElementById("wave-flow-trigger").style.animation = "pulse 1.5s infinite";
-                
-                // Смотрим предпочтения из Избранного, если их нет — берем дефолтные крутые стили
-                let genre = "Electronic";
-                if(state.favorites.length > 0) {
-                    genre = "Lo-Fi"; // Упрощенный клиентский подбор под жанровую модель
-                }
-                
-                document.getElementById("master-title").textContent = "Генерация Волны...";
-                try {
-                    const res = await fetch(`${API_HOST}/v1/tracks/trending?genre=${genre}&app_name=MuziDog`);
-                    const json = await res.json();
-                    state.currentQueue = json.data || [];
-                    if(state.currentQueue.length > 0) {
-                        playTrack(0);
-                    }
-                } catch(e){}
-            });
+            function renderGridList(container, list) {
+                container.innerHTML = "";
+                list.forEach((track, idx) => {
+                    const card = document.createElement("div");
+                    card.className = "music-card";
+                    card.innerHTML = `
+                        <img src="${track.cover}" alt="cover">
+                        <div class="card-title">${track.title}</div>
+                        <div class="card-artist">${track.artist}</div>
+                    `;
+                    card.addEventListener("click", () => {
+                        state.currentQueue = list;
+                        playTrack(idx);
+                    });
+                    container.appendChild(card);
+                });
+            }
 
-            // --- ДВИЖОК ОТОБРАЖЕНИЯ СПИСКОВ ТРЕКОВ ---
-            function renderTrackList(container, list) {
+            // --- СТРОЧНЫЙ ДВИЖОК ОТОБРАЖЕНИЯ (ДЛЯ ЛЮБИМЫХ И ПОЛКИ) ---
+            function renderTrackLines(container, list, type) {
                 container.innerHTML = "";
                 if(list.length === 0) {
-                    container.innerHTML = "<div style='color:var(--text-muted); padding: 10px;'>Тут пока ничего нет.</div>";
+                    container.innerHTML = "<div style='color:var(--text-muted); padding: 15px;'>Здесь пусто. Время добавить треки!</div>";
                     return;
                 }
                 list.forEach((track, idx) => {
-                    const isLiked = state.favorites.some(f => f.id === track.id);
                     const row = document.createElement("div");
                     row.className = `track-row ${state.currentIndex !== null && state.currentQueue[state.currentIndex]?.id === track.id ? 'active' : ''}`;
                     row.innerHTML = `
                         <div class="row-meta">
-                            <span class="row-index">${idx + 1}</span>
+                            <img src="${track.cover}" class="row-img" alt="c">
                             <div class="row-info">
                                 <span class="row-title">${track.title}</span>
-                                <span class="row-artist">${track.user.name}</span>
+                                <span class="row-artist">${track.artist}</span>
                             </div>
                         </div>
                         <div class="row-controls">
-                            <button class="btn-icon row-like-btn ${isLiked?'liked':''}">♥</button>
-                            <button class="btn-icon row-add-pl" title="Добавить в плейлист">➕</button>
+                            <button class="btn-xl action-del-row" title="Удалить"><i class="fa-solid fa-trash-can" style="font-size:16px;"></i></button>
                         </div>
                     `;
                     
                     row.addEventListener("click", (e) => {
-                        if(e.target.classList.contains("btn-icon")) return;
+                        if(e.target.closest(".btn-xl")) return;
                         state.currentQueue = list;
                         playTrack(idx);
                     });
 
-                    row.querySelector(".row-like-btn").addEventListener("click", () => toggleLike(track));
-                    row.querySelector(".row-add-pl").addEventListener("click", () => addTrackToPlaylistPrompt(track));
+                    row.querySelector(".action-del-row").addEventListener("click", () => {
+                        if(type === 'fav') toggleLike(track);
+                        if(type === 'shelf') toggleShelf(track);
+                    });
                     
                     container.appendChild(row);
                 });
             }
 
-            // --- УПРАВЛЕНИЕ АУДИОПОТОКОМ ---
+            // --- АЛГОРИТМ ВАЙБ-ПОТОКА ---
+            document.getElementById("wave-flow-trigger").addEventListener("click", async () => {
+                state.isFlowActive = true;
+                toast("Вайб-Поток сгенерирован под твой профиль", "fa-wand-magic-sparkles");
+                const searchKeywords = ["lofi", "phonk", "cyberpunk", "chillstep"];
+                const randomKeyword = searchKeywords[Math.floor(Math.random() * searchKeywords.length)];
+                
+                try {
+                    const res = await fetch(`https://itunes.apple.com/search?term=${randomKeyword}&media=music&limit=25`);
+                    const data = await res.json();
+                    state.currentQueue = (data.results || []).map(mapTrackData);
+                    if(state.currentQueue.length > 0) playTrack(0);
+                } catch(e){}
+            });
+
+            // --- УПРАВЛЕНИЕ АУДИО И ИНИЦИАЛИЗАЦИЯ ВИЗУАЛИЗАТОРА ---
             const masterPlay = document.getElementById("master-play");
             const masterSlider = document.getElementById("master-slider");
             const masterVolume = document.getElementById("master-volume");
             const timeCur = document.getElementById("time-cur");
             const timeDur = document.getElementById("time-dur");
-            const pitchSelect = document.getElementById("track-pitch");
+
+            function initAudioContext() {
+                if (audioCtx) return;
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                source = audioCtx.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                analyser.fftSize = 128;
+                drawVisualizer();
+            }
 
             function playTrack(idx) {
                 if (idx < 0 || idx >= state.currentQueue.length) return;
+                initAudioContext(); // Ленивый запуск контекста по жесту пользователя
+
                 state.currentIndex = idx;
                 const track = state.currentQueue[idx];
 
-                audio.src = `${API_HOST}/v1/tracks/${track.id}/stream?app_name=MuziDog`;
-                audio.playbackRate = parseFloat(pitchSelect.value);
+                audio.src = track.streamUrl;
                 audio.play().catch(() => {});
 
                 document.getElementById("master-title").textContent = track.title;
-                document.getElementById("master-artist").textContent = track.user.name;
-                masterPlay.textContent = "⏸";
+                document.getElementById("master-artist").textContent = track.artist;
+                document.getElementById("master-img").src = track.cover;
+                masterPlay.innerHTML = `<i class="fa-solid fa-pause"></i>`;
 
-                // Обновление кнопок лайка на мастер-панели
-                updateMasterPanelButtons(track);
-                
-                // Перерисовка активных строк
-                const activeView = document.querySelector(".view.active");
-                if(activeView.id === "view-search") renderTrackList(searchResultsList, state.currentQueue);
-                if(activeView.id === "view-library") renderLibrary();
+                updatePlayerBarButtons(track);
             }
 
             masterPlay.addEventListener("click", () => {
                 if(!audio.src) return;
-                if(audio.paused) { audio.play(); masterPlay.textContent = "⏸"; }
-                else { audio.pause(); masterPlay.textContent = "▶"; }
+                initAudioContext();
+                if(audio.paused) { audio.play(); masterPlay.innerHTML = `<i class="fa-solid fa-pause"></i>`; }
+                else { audio.pause(); masterPlay.innerHTML = `<i class="fa-solid fa-play"></i>`; }
             });
 
-            document.getElementById("master-next").addEventListener("click", () => {
-                if(state.currentIndex !== null) playTrack(state.currentIndex + 1);
-            });
-            document.getElementById("master-prev").addEventListener("click", () => {
-                if(state.currentIndex !== null) playTrack(state.currentIndex - 1);
-            });
+            document.getElementById("master-next").addEventListener("click", () => { if(state.currentIndex !== null) playTrack(state.currentIndex + 1); });
+            document.getElementById("master-prev").addEventListener("click", () => { if(state.currentIndex !== null) playTrack(state.currentIndex - 1); });
 
             audio.addEventListener("timeupdate", () => {
                 if(isNaN(audio.duration)) return;
@@ -519,26 +503,61 @@
             });
 
             masterVolume.addEventListener("input", () => audio.volume = masterVolume.value);
-            pitchSelect.addEventListener("change", () => audio.playbackRate = parseFloat(pitchSelect.value));
 
             audio.addEventListener("ended", () => {
                 if(state.currentIndex !== null && state.currentIndex + 1 < state.currentQueue.length) {
                     playTrack(state.currentIndex + 1);
                 } else if(state.isFlowActive) {
-                    document.getElementById("wave-flow-trigger").click(); // Циклим волну дальше
+                    document.getElementById("wave-flow-trigger").click();
                 }
             });
 
-            // --- ЛОКАЛЬНОЕ ХРАНИЛИЩЕ: ЛАЙКИ И ПОЛКА ---
+            // --- СИНХРОННЫЙ АУДИО-ВИЗУАЛИЗАТОР (CANVAS) ---
+            const canvas = document.getElementById("visualizer");
+            const ctx = canvas.getContext("2d");
+
+            function drawVisualizer() {
+                requestAnimationFrame(drawVisualizer);
+                if(!analyser) return;
+
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+
+                for(let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2.5;
+                    ctx.fillStyle = `rgba(255, 0, 85, ${barHeight / 100})`;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
+                    x += barWidth;
+                }
+            }
+
+            // Адаптируем холст визуализатора под размеры контейнера
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = 80;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // --- ХРАНЕНИЕ: ЛАЙКИ И ПОЛКА ---
             function toggleLike(track) {
                 const idx = state.favorites.findIndex(f => f.id === track.id);
                 if(idx === -1) {
                     state.favorites.push(track);
+                    toast("Добавлено в Любимые треки", "fa-heart");
                 } else {
                     state.favorites.splice(idx, 1);
+                    toast("Удалено из Любимых", "fa-trash-can");
                 }
                 localStorage.setItem("md_favs", JSON.stringify(state.favorites));
-                updateMasterPanelButtons(track);
+                updatePlayerBarButtons(track);
                 renderLibrary();
             }
 
@@ -546,24 +565,26 @@
                 const idx = state.myTracks.findIndex(f => f.id === track.id);
                 if(idx === -1) {
                     state.myTracks.push(track);
+                    toast("Сохранено на Личную полку", "fa-box-archive");
                 } else {
                     state.myTracks.splice(idx, 1);
+                    toast("Удалено с Личной полки", "fa-trash-can");
                 }
                 localStorage.setItem("md_shelf", JSON.stringify(state.myTracks));
-                updateMasterPanelButtons(track);
+                updatePlayerBarButtons(track);
                 renderLibrary();
             }
 
-            function updateMasterPanelButtons(track) {
+            function updatePlayerBarButtons(track) {
                 if(!track) return;
                 const isLiked = state.favorites.some(f => f.id === track.id);
                 const isSaved = state.myTracks.some(f => f.id === track.id);
-                
-                const masterLike = document.getElementById("master-like-btn");
-                const masterShelf = document.getElementById("master-shelf-btn");
 
-                if(isLiked) masterLike.classList.add("liked"); else masterLike.classList.remove("liked");
-                if(isSaved) masterShelf.style.color = "var(--accent)"; else masterShelf.style.color = "var(--text-muted)";
+                const likeBtn = document.getElementById("master-like-btn");
+                const shelfBtn = document.getElementById("master-shelf-btn");
+
+                if(isLiked) likeBtn.classList.add("liked"); else likeBtn.classList.remove("liked");
+                if(isSaved) shelfBtn.classList.add("shelved"); else shelfBtn.classList.remove("shelved");
             }
 
             document.getElementById("master-like-btn").addEventListener("click", () => {
@@ -574,16 +595,17 @@
             });
 
             function renderLibrary() {
-                renderTrackList(document.getElementById("library-favorites-list"), state.favorites);
-                renderTrackList(document.getElementById("library-saved-list"), state.myTracks);
+                renderTrackLines(document.getElementById("library-favorites-list"), state.favorites, 'fav');
+                renderTrackLines(document.getElementById("library-saved-list"), state.myTracks, 'shelf');
             }
 
-            // --- ПЛЕЙЛИСТЫ И КАРТОЧКИ ---
+            // --- ПЛЕЙЛИСТЫ ---
             document.getElementById("create-playlist-btn").addEventListener("click", () => {
-                const name = prompt("Введите название нового плейлиста:");
+                const name = prompt("Название нового сборника:");
                 if(!name) return;
                 state.playlists.push({ name: name, tracks: [] });
                 localStorage.setItem("md_playlists", JSON.stringify(state.playlists));
+                toast(`Создан сборник: ${name}`, "fa-compact-disc");
                 renderPlaylists();
             });
 
@@ -594,106 +616,45 @@
                     const card = document.createElement("div");
                     card.className = "music-card";
                     card.innerHTML = `
-                        <img src="https://placehold.co/150x150/222/fff?text=PL" alt="pl">
+                        <img src="https://placehold.co/400x400/1f222c/fff?text=${encodeURIComponent(pl.name)}" alt="pl">
                         <div class="card-title">${pl.name}</div>
-                        <div class="card-artist">${pl.tracks.length} треков</div>
+                        <div class="card-artist">${pl.tracks.length} Аудиозаписей</div>
                     `;
                     card.addEventListener("click", () => {
                         const targetView = document.getElementById("active-playlist-view");
-                        targetView.innerHTML = `<h3 class='section-title'>Содержимое плейлиста: ${pl.name}</h3><div id='pl-tracks-inside'></div>`;
-                        renderTrackList(document.getElementById("pl-tracks-inside"), pl.tracks);
+                        targetView.innerHTML = `<h3 class='section-title'><i class="fa-solid fa-folder-open"></i> ${pl.name}</h3><div id='pl-tracks-inside'></div>`;
+                        renderTrackLines(document.getElementById("pl-tracks-inside"), pl.tracks, 'none');
                     });
                     grid.appendChild(card);
                 });
             }
 
-            function addTrackToPlaylistPrompt(track) {
-                if(state.playlists.length === 0) { alert("Сначала создайте плейлист."); return; }
-                let names = state.playlists.map((p,i) => `${i}: ${p.name}`).join("\n");
-                let choice = prompt(`Выберите индекс плейлиста для добавления:\n${names}`);
-                let idx = parseInt(choice);
-                if(!isNaN(idx) && state.playlists[idx]) {
-                    if(!state.playlists[idx].tracks.some(t => t.id === track.id)) {
-                        state.playlists[idx].tracks.push(track);
-                        localStorage.setItem("md_playlists", JSON.stringify(state.playlists));
-                        alert("Добавлено!");
-                    }
-                }
-            }
-
-            // --- СКАЧИВАНИЕ МУЗЫКИ НАПРЯМУЮ ИЗ СЕТИ ---
+            // --- ПРЯМАЯ ЗАГРУЗКА МЕДИАФАЙЛОВ ---
             document.getElementById("master-download").addEventListener("click", async () => {
                 if(state.currentIndex === null) return;
                 const track = state.currentQueue[state.currentIndex];
-                const streamUrl = `${API_HOST}/v1/tracks/${track.id}/stream?app_name=MuziDog`;
+                toast("Запрашиваем файл у медиасервера...", "fa-circle-down");
                 
-                document.getElementById("master-download").textContent = "⏳";
                 try {
-                    const response = await fetch(streamUrl);
+                    const response = await fetch(track.streamUrl);
                     const blob = await response.blob();
                     const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = `${track.user.name} - ${track.title}.mp3`;
+                    link.download = `${track.artist} - ${track.title}.mp3`;
                     link.click();
-                } catch (e) { alert("Не удалось скачать этот поток."); }
-                document.getElementById("master-download").textContent = "💾";
+                    toast("Загрузка успешно завершена!", "fa-circle-check");
+                } catch (e) { toast("Загрузка заблокирована политикой хоста", "fa-circle-exclamation"); }
             });
 
-            // --- ТЕМЫ И НАСТРОЙКИ ---
+            // --- СТИЛИЗАЦИЯ И СМЕНА ТЕМУ ---
             const dots = document.querySelectorAll(".theme-dot");
             dots.forEach(dot => {
                 dot.addEventListener("click", () => {
                     dots.forEach(d => d.classList.remove("active"));
                     dot.classList.add("active");
                     document.body.setAttribute("data-theme", dot.dataset.theme);
-                    localStorage.setItem("md_theme", dot.dataset.theme);
+                    toast("Стиль интерфейса успешно обновлен");
                 });
-            });
-            // Восстановление темы
-            const savedTheme = localStorage.getItem("md_theme");
-            if(savedTheme) {
-                document.body.setAttribute("data-theme", savedTheme);
-                dots.forEach(d => { if(d.dataset.theme === savedTheme) d.classList.add("active"); else d.classList.remove("active"); });
-            }
-
-            // ТАЙМЕР СНА
-            const sleepSelect = document.getElementById("sleep-timer");
-            const countdownSpan = document.getElementById("timer-countdown");
-            sleepSelect.addEventListener("change", () => {
-                clearInterval(sleepTimerInterval);
-                let minutes = parseInt(sleepSelect.value);
-                if(minutes === 0) { countdownSpan.textContent = ""; return; }
-                
-                let secondsLeft = minutes * 60;
-                sleepTimerInterval = setInterval(() => {
-                    secondsLeft--;
-                    let m = Math.floor(secondsLeft / 60);
-                    let s = secondsLeft % 60;
-                    countdownSpan.textContent = `Осталось: ${m}:${s<10?'0':''}${s}`;
-                    if(secondsLeft <= 0) {
-                        clearInterval(sleepTimerInterval);
-                        audio.pause();
-                        masterPlay.textContent = "▶";
-                        countdownSpan.textContent = "Zzz...";
-                    }
-                }, 1000);
-            });
-
-            // СБРОС БАЗЫ ДАННЫХ
-            document.getElementById("clear-db-btn").addEventListener("click", () => {
-                if(confirm("Вы уверены, что хотите полностью очистить всю медиатеку? Это действие необратимо.")) {
-                    localStorage.clear();
-                    location.reload();
-                }
-            });
-
-            document.getElementById("export-db-btn").addEventListener("click", () => {
-                const backup = JSON.stringify(state);
-                const blob = new Blob([backup], {type: "application/json"});
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = "muzidog_backup.json";
-                link.click();
             });
 
             function formatTime(secs) {
@@ -702,7 +663,7 @@
                 return `${m}:${s < 10 ? '0' : ''}${s}`;
             }
 
-            // Первичный запуск трендов
+            // Старт
             loadGlobalTrending();
         });
     </script>
