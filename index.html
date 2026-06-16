@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MuziDog Premium (Full Length)</title>
+    <title>MuziDog Global Unlimited</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -44,7 +44,7 @@
         .nav-btn:hover, .nav-btn.active { color: var(--text-main); background: var(--bg-card); }
         .nav-btn.active { border-left: 4px solid var(--accent); color: var(--text-main); }
 
-        /* ГЛАВНАЯ ПАНЕЛЬ И ПОИСК СВЕРХУ */
+        /* ПОИСК НАВЕРХУ */
         .main-panel { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 110px; }
         .header-sticky { position: sticky; top: 0; background: linear-gradient(to bottom, var(--bg-main) 70%, transparent); padding: 30px 40px 15px 40px; z-index: 5; }
         .search-wrapper { position: relative; width: 100%; max-width: 700px; margin: 0 auto; }
@@ -56,12 +56,12 @@
         .hint-item { padding: 14px 20px; cursor: pointer; font-size: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .hint-item:hover { background: var(--bg-main); color: var(--accent); }
 
-        /* КОНТЕНТНЫЕ ЗОНЫ */
+        /* СТРАНИЦЫ */
         .view { display: none; padding: 20px 40px; animation: smoothUp 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .view.active { display: block; }
         @keyframes smoothUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ВАЙБ-ПОТОК С СИНХРОННЫМ ВИЗУАЛИЗАТОРОМ */
+        /* ВАЙБ-ПОТОК */
         .wave-container { background: linear-gradient(135deg, #12131a, #07070a); border: 1px solid var(--border); padding: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; position: relative; overflow: hidden; }
         .wave-info { z-index: 2; }
         .wave-info h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -69,9 +69,9 @@
         .wave-play-btn { width: 75px; height: 75px; border-radius: 50%; background: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #000; box-shadow: 0 8px 25px rgba(255,255,255,0.2); transition: var(--transition); z-index: 2; }
         .wave-play-btn:hover { transform: scale(1.08); background: var(--accent); color: #fff; }
         
-        #visualizer { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; z-index: 1; opacity: 0.4; pointer-events: none; }
+        #visualizer { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; z-index: 1; opacity: 0.5; pointer-events: none; }
 
-        /* СЕТКА И СТРОКИ ТРЕКОВ */
+        /* СЕТКА */
         .section-title { font-size: 24px; font-weight: 700; margin-bottom: 25px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
         
@@ -79,7 +79,7 @@
         .music-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
         .music-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover; margin-bottom: 14px; background: #1f222c; }
         .card-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-artist { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+        .card-artist { font-size: 13px; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .track-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: var(--radius); border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
         .track-row:hover { background: var(--bg-card); transform: translateX(4px); }
@@ -91,13 +91,13 @@
         .row-artist { font-size: 13px; color: var(--text-muted); }
         .row-controls { display: flex; align-items: center; gap: 20px; }
 
-        /* ПЛЕЙБАР (НИЖНЯЯ ПАНЕЛЬ) */
+        /* ПЛЕЙБАР ВНИЗУ */
         .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 100px; background: rgba(13,14,18,0.92); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 100; }
         .player-left { width: 30%; display: flex; align-items: center; gap: 20px; }
         .player-center { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .player-right { width: 30%; display: flex; align-items: center; justify-content: flex-end; gap: 20px; }
 
-        /* УВЕЛИЧЕННЫЕ КНОПКИ ДЕЙСТВИЙ */
+        /* УВЕЛИЧЕННЫЕ КНОПКИ НА ТРЕКЕ */
         .btn-xl { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 22px; transition: var(--transition); padding: 8px; display: flex; align-items: center; justify-content: center; }
         .btn-xl:hover { color: var(--text-main); transform: scale(1.15); }
         .btn-xl.liked { color: #ff0055 !important; }
@@ -135,7 +135,7 @@
                 <button class="nav-btn" data-target="view-settings"><i class="fa-solid fa-gear"></i> Настройки</button>
             </div>
         </div>
-        <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-bolt"></i> Audius Full-Length Engine</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-bolt"></i> Engine: YouTube Media stream</div>
     </aside>
 
     <main class="main-panel">
@@ -143,7 +143,7 @@
         <div class="header-sticky">
             <div class="search-wrapper">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="search-input" id="global-search" placeholder="Поиск полноценных треков (без ограничений)...">
+                <input type="text" class="search-input" id="global-search" placeholder="Найди любой трек, исполнителя или клип в мире...">
                 <div class="search-hints" id="search-hints"></div>
             </div>
         </div>
@@ -152,13 +152,13 @@
             <div class="wave-container">
                 <div class="wave-info">
                     <h1>Вайб-Поток</h1>
-                    <p>Интеллектуальный бесконечный стриминг полных треков без ограничений по времени.</p>
+                    <p>Бесконечный стриминг чистых аудиодорожек без ограничений по времени.</p>
                 </div>
                 <button class="wave-play-btn" id="wave-flow-trigger"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
                 <canvas id="visualizer"></canvas>
             </div>
 
-            <h2 class="section-title" id="main-content-title"><i class="fa-solid fa-fire" style="color: #ff9900;"></i> Рекомендуемый Вайб</h2>
+            <h2 class="section-title" id="main-content-title"><i class="fa-solid fa-fire" style="color: #ff9900;"></i> Популярно сейчас</h2>
             <div class="grid-layout" id="recommendations-grid"></div>
         </section>
 
@@ -199,10 +199,10 @@
             <img src="https://placehold.co/100x100/13151b/fff?text=Muzi" class="row-img" id="master-img" alt="cover">
             <div class="row-info">
                 <span class="row-title" id="master-title">Ожидание потока</span>
-                <span class="row-artist" id="master-artist">MuziDog Core v3</span>
+                <span class="row-artist" id="master-artist">MuziDog Core v4</span>
             </div>
-            <button class="btn-xl" id="master-like-btn" title="Лайкнуть"><i class="fa-solid fa-heart"></i></button>
-            <button class="btn-xl" id="master-shelf-btn" title="На мою полку"><i class="fa-solid fa-box-archive"></i></button>
+            <button class="btn-xl" id="master-like-btn" title="В Любимое"><i class="fa-solid fa-heart"></i></button>
+            <button class="btn-xl" id="master-shelf-btn" title="В Мои треки"><i class="fa-solid fa-box-archive"></i></button>
         </div>
 
         <div class="player-center">
@@ -219,7 +219,7 @@
         </div>
 
         <div class="player-right">
-            <button class="btn-xl" id="master-download" title="Скачать MP3 файл полностью" style="margin-right: 15px;"><i class="fa-solid fa-circle-down"></i></button>
+            <button class="btn-xl" id="master-download" title="Скачать MP3 полностью" style="margin-right: 15px;"><i class="fa-solid fa-circle-down"></i></button>
             <i class="fa-solid fa-volume-high" style="color: var(--text-muted);"></i>
             <input type="range" class="slider" id="master-volume" min="0" max="1" step="0.05" value="0.7" style="max-width: 100px;">
         </div>
@@ -227,9 +227,10 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const API_HOST = "https://api.audius.co";
+            // Выбираем стабильное публичное зеркало децентрализованного API Invidious
+            const STREAM_NODE = "https://inv.tux.digital"; 
             const audio = new Audio();
-            audio.crossOrigin = "anonymous"; // Разрешаем чтение частот для визуализатора
+            audio.crossOrigin = "anonymous"; // Важно для считывания волн визуализатора через CORS proxy
 
             let audioCtx = null, analyser = null, source = null;
 
@@ -250,7 +251,7 @@
                 setTimeout(() => t.remove(), 2800);
             }
 
-            // НАВИГАЦИЯ С ЭФФЕКТОМ МАСШТАБА ЛОГОТИПА
+            // НАВИГАЦИЯ
             const navButtons = document.querySelectorAll(".nav-btn");
             const views = document.querySelectorAll(".view");
             const logoBlock = document.getElementById("logo-block");
@@ -274,7 +275,7 @@
                 });
             });
 
-            // МОДИФИЦИРОВАННЫЙ ПОИСК ПО ПОЛНОРАЗМЕРНОЙ БАЗЕ
+            // МОЩНЫЙ ПОИСК ПО БАЗЕ YOUTUBE (БЕЗ ОГРАНИЧЕНИЙ ДЛИНЫ)
             const searchInput = document.getElementById("global-search");
             const searchHints = document.getElementById("search-hints");
             let debounceTimer;
@@ -286,18 +287,17 @@
 
                 debounceTimer = setTimeout(async () => {
                     try {
-                        const res = await fetch(`${API_HOST}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=MuziDog`);
-                        const json = await res.json();
-                        const tracks = json.data || [];
+                        const res = await fetch(`${STREAM_NODE}/api/v1/search?q=${encodeURIComponent(query)}&type=video`);
+                        const tracks = await res.json();
                         
-                        if(tracks.length > 0) {
+                        if(tracks && tracks.length > 0) {
                             searchHints.innerHTML = "";
                             tracks.slice(0, 6).forEach(t => {
                                 const hint = document.createElement("div");
                                 hint.className = "hint-item";
-                                hint.innerHTML = `<i class="fa-solid fa-music"></i> ${t.title} — <b>${t.user.name}</b>`;
+                                hint.innerHTML = `<i class="fa-solid fa-music"></i> ${t.title}`;
                                 hint.addEventListener("click", () => {
-                                    const mapped = mapAudiusTrack(t);
+                                    const mapped = mapYoutubeTrack(t);
                                     state.currentQueue = [mapped];
                                     playTrack(0);
                                     searchHints.style.display = "none";
@@ -308,7 +308,7 @@
                             searchHints.style.display = "block";
                         }
                     } catch(e) {}
-                }, 300);
+                }, 400);
             });
 
             document.addEventListener("click", (e) => { if(e.target !== searchInput) searchHints.style.display = "none"; });
@@ -317,40 +317,41 @@
                 if(e.key === "Enter") {
                     searchHints.style.display = "none";
                     const query = searchInput.value.trim();
-                    toast(`Сканируем сеть по запросу: ${query}`, "fa-magnifying-glass");
+                    toast(`Сканируем медиабазу: ${query}`, "fa-magnifying-glass");
                     
                     try {
-                        const res = await fetch(`${API_HOST}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=MuziDog`);
-                        const json = await res.json();
-                        state.currentQueue = (json.data || []).map(mapAudiusTrack);
+                        const res = await fetch(`${STREAM_NODE}/api/v1/search?q=${encodeURIComponent(query + " music")}&type=video`);
+                        const rawTracks = await res.json();
+                        state.currentQueue = rawTracks.filter(t => t.videoId).map(mapYoutubeTrack);
                         
                         document.querySelector('[data-target="view-home"]').click();
-                        document.getElementById("main-content-title").innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Результаты для "${query}"`;
+                        document.getElementById("main-content-title").innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Найдено по запросу "${query}"`;
                         renderGridList(document.getElementById("recommendations-grid"), state.currentQueue);
-                    } catch(err) { toast("Ошибка соединения с нодой поиска", "fa-circle-exclamation"); }
+                    } catch(err) { toast("Нода перегружена, повтори попытку", "fa-circle-exclamation"); }
                 }
             });
 
-            function mapAudiusTrack(t) {
+            function mapYoutubeTrack(t) {
                 return {
-                    id: t.id,
+                    id: t.videoId,
                     title: t.title,
-                    artist: t.user.name,
-                    streamUrl: `${API_HOST}/v1/tracks/${t.id}/stream?app_name=MuziDog`,
-                    cover: t.artwork ? t.artwork['480x480'] : "https://placehold.co/400x400/13151b/fff?text=Muzi"
+                    artist: t.author || "YouTube Music",
+                    // Запрашиваем только аудиодорожку (itag 140) и пускаем её через прокси ноды (local=true) ради обхода CORS
+                    streamUrl: `${STREAM_NODE}/latest_version?id=${t.videoId}&local=true&itag=140`,
+                    cover: `https://img.youtube.com/vi/${t.videoId}/hqdefault.jpg`
                 };
             }
 
-            // СТАБИЛЬНЫЕ РЕКОМЕНДАЦИИ НА СТАРТЕ (ГОРЯЧИЕ ТРЕНДЫ)
+            // ГЕНЕРАЦИЯ МУЗЫКАЛЬНЫХ ТРЕНДОВ НА СТАРТЕ
             async function loadGlobalTrending() {
                 const grid = document.getElementById("recommendations-grid");
-                grid.innerHTML = "<div style='color:var(--text-muted)'>Получение топ-листа...</div>";
+                grid.innerHTML = "<div style='color:var(--text-muted)'>Соединение с глобальным сервером...</div>";
                 try {
-                    const res = await fetch(`${API_HOST}/v1/tracks/trending?app_name=MuziDog`);
-                    const json = await res.json();
-                    state.currentQueue = (json.data || []).slice(0, 12).map(mapAudiusTrack);
+                    const res = await fetch(`${STREAM_NODE}/api/v1/search?q=pop+hits+2026&type=video`);
+                    const rawTracks = await res.json();
+                    state.currentQueue = rawTracks.slice(0, 12).map(mapYoutubeTrack);
                     renderGridList(grid, state.currentQueue);
-                } catch(e) { grid.innerHTML = "Не удалось обновить подборку."; }
+                } catch(e) { grid.innerHTML = "Ошибка загрузки потока трендов."; }
             }
 
             function renderGridList(container, list) {
@@ -359,7 +360,7 @@
                     const card = document.createElement("div");
                     card.className = "music-card";
                     card.innerHTML = `
-                        <img src="${track.cover}" alt="cover">
+                        <img src="${track.cover}" alt="cover" onerror="this.src='https://placehold.co/400x400/13151b/fff?text=Music'">
                         <div class="card-title">${track.title}</div>
                         <div class="card-artist">${track.artist}</div>
                     `;
@@ -371,11 +372,11 @@
                 });
             }
 
-            // ОТОБРАЖЕНИЕ СТРОК (ДЛЯ РАЗДЕЛЬНЫХ ВКЛАДОК)
+            // СТРОКИ ДЛЯ РАЗДЕЛЬНЫХ ВКЛАДОК
             function renderTrackLines(container, list, type) {
                 container.innerHTML = "";
                 if(list.length === 0) {
-                    container.innerHTML = "<div style='color:var(--text-muted); padding: 15px;'>В этой категории пока пусто.</div>";
+                    container.innerHTML = "<div style='color:var(--text-muted); padding: 15px;'>В этой вкладке пока пусто.</div>";
                     return;
                 }
                 list.forEach((track, idx) => {
@@ -383,7 +384,7 @@
                     row.className = `track-row ${state.currentIndex !== null && state.currentQueue[state.currentIndex]?.id === track.id ? 'active' : ''}`;
                     row.innerHTML = `
                         <div class="row-meta">
-                            <img src="${track.cover}" class="row-img" alt="c">
+                            <img src="${track.cover}" class="row-img" alt="c" onerror="this.src='https://placehold.co/100x100/13151b/fff?text=Music'">
                             <div class="row-info">
                                 <span class="row-title">${track.title}</span>
                                 <span class="row-artist">${track.artist}</span>
@@ -409,18 +410,20 @@
                 });
             }
 
-            // ВАЙБ-ПОТОК (ГЕНЕРИРУЕТ БЕЗЛИМИТНЫЙ ПЛЕЙЛИСТ)
+            // БЕСКОНЕЧНЫЙ ВАЙБ-ПОТОК
             document.getElementById("wave-flow-trigger").addEventListener("click", async () => {
-                toast("Запуск бесконечного Вайб-Потока", "fa-wand-magic-sparkles");
+                toast("Подключаем бесконечный Вайб-Поток", "fa-wand-magic-sparkles");
                 try {
-                    const res = await fetch(`${API_HOST}/v1/tracks/trending?genre=Electronic&app_name=MuziDog`);
-                    const json = await res.json();
-                    state.currentQueue = (json.data || []).map(mapAudiusTrack);
+                    const vibes = ["lofi chill", "synthwave 80s", "phonk bass", "cyberpunk gaming"];
+                    const chosen = vibes[Math.floor(Math.random() * vibes.length)];
+                    const res = await fetch(`${STREAM_NODE}/api/v1/search?q=${encodeURIComponent(chosen)}&type=video`);
+                    const rawTracks = await res.json();
+                    state.currentQueue = rawTracks.map(mapYoutubeTrack);
                     if(state.currentQueue.length > 0) playTrack(0);
                 } catch(e){}
             });
 
-            // ИНИЦИАЛИЗАЦИЯ И УПРАВЛЕНИЕ ЗВУКОМ
+            // МОДУЛЬ АУДИОКОНТЕКСТА И УПРАВЛЕНИЯ
             const masterPlay = document.getElementById("master-play");
             const masterSlider = document.getElementById("master-slider");
             const masterVolume = document.getElementById("master-volume");
@@ -486,7 +489,7 @@
                 }
             });
 
-            // СИНХРОННЫЙ ВИЗУАЛИЗАТОР ЧАСТОТ (CANVAS)
+            // НЕОНОВЫЙ ВИЗУАЛИЗАТОР СПЕКТРА
             const canvas = document.getElementById("visualizer");
             const ctx = canvas.getContext("2d");
 
@@ -519,12 +522,12 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            // СИСТЕМА ЛОКАЛЬНОГО ХРАНЕНИЯ (ИЗБРАННОЕ И ПОЛКА)
+            // ИЗБРАННОЕ И ЛИЧНАЯ ПОЛКА
             function toggleLike(track) {
                 const idx = state.favorites.findIndex(f => f.id === track.id);
                 if(idx === -1) {
                     state.favorites.push(track);
-                    toast("Добавлено в Любимые", "fa-heart");
+                    toast("Добавлено в Любимые треки", "fa-heart");
                 } else {
                     state.favorites.splice(idx, 1);
                     toast("Удалено из Любимых", "fa-trash-can");
@@ -538,10 +541,10 @@
                 const idx = state.myTracks.findIndex(f => f.id === track.id);
                 if(idx === -1) {
                     state.myTracks.push(track);
-                    toast("Сохранено на Личную полку", "fa-box-archive");
+                    toast("Сохранено в Мои треки", "fa-box-archive");
                 } else {
                     state.myTracks.splice(idx, 1);
-                    toast("Удалено с вашей Полки", "fa-trash-can");
+                    toast("Удалено из Ваших треков", "fa-trash-can");
                 }
                 localStorage.setItem("md_shelf", JSON.stringify(state.myTracks));
                 updatePlayerBarButtons(track);
@@ -591,7 +594,7 @@
                     card.innerHTML = `
                         <img src="https://placehold.co/400x400/1f222c/fff?text=List" alt="pl">
                         <div class="card-title">${pl.name}</div>
-                        <div class="card-artist">${pl.tracks.length} треков</div>
+                        <div class="card-artist">${pl.tracks.length} аудиозаписей</div>
                     `;
                     card.addEventListener("click", () => {
                         const targetView = document.getElementById("active-playlist-view");
@@ -602,31 +605,31 @@
                 });
             }
 
-            // ВЫКАЧИВАНИЕ ПОЛНЫХ MP3 ФАЙЛОВ
+            // СКАЧИВАНИЕ ПОЛНЫХ MP3
             document.getElementById("master-download").addEventListener("click", async () => {
                 if(state.currentIndex === null) return;
                 const track = state.currentQueue[state.currentIndex];
-                toast("Файл упаковывается для загрузки...", "fa-circle-down");
+                toast("Закачиваем аудиофайл с сервера...", "fa-circle-down");
                 
                 try {
                     const response = await fetch(track.streamUrl);
                     const blob = await response.blob();
                     const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = `${track.artist} - ${track.title}.mp3`;
+                    link.download = `${track.title}.mp3`;
                     link.click();
-                    toast("Файл успешно скачан на диск!", "fa-circle-check");
+                    toast("Скачивание завершено успешно!", "fa-circle-check");
                 } catch (e) { toast("Не удалось перехватить поток", "fa-circle-exclamation"); }
             });
 
-            // СМЕНА ТЕМЫ
+            // ТЕМЫ
             const dots = document.querySelectorAll(".theme-dot");
             dots.forEach(dot => {
                 dot.addEventListener("click", () => {
                     dots.forEach(d => d.classList.remove("active"));
                     dot.classList.add("active");
                     document.body.setAttribute("data-theme", dot.dataset.theme);
-                    toast("Стиль интерфейса изменен");
+                    toast("Интерфейс перекрашен!");
                 });
             });
 
